@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]   # publica cada vez que haces push a main
-  workflow_dispatch:      # también puedes lanzarlo manualmente
+    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,14 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      - run: npm ci
+
+      # Más tolerante que npm ci
+      - run: npm install
+
+      # Compila Vite
       - run: npm run build
-      # Evita 404 al refrescar rutas si usas BrowserRouter
-      - run: cp dist/index.html dist/404.html
+
+      # SPA con BrowserRouter: evita 404 al refrescar
+      - run: cp dist/index.html dist/404.html || true
+
+      # 👇 Configura Pages ANTES de subir el artefacto (clave para evitar 404)
+      - uses: actions/configure-pages@v5
+
+      # Sube el artefacto generado a Pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
@@ -34,6 +45,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
