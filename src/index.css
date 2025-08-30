@@ -1,0 +1,730 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.pretty-input {
+  padding-left: 42px;
+  padding-right: 38px;
+  border-radius: 14px !important;
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: none;
+}
+.pretty-input:focus {
+  border-color: rgba(13, 110, 253, .45);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .15);
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: .6;
+  font-size: 18px;
+}
+.btn-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  width: 28px;
+  height: 28px;
+  line-height: 26px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.06);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: .7;
+}
+.btn-clear:hover { background: rgba(0,0,0,.1); opacity: 1; }
+
+/* ===== Tema global aplicado al <body> desde App.jsx ===== */
+.theme-light {
+  background-color: #f8f9fa; /* gris claro bootstrap */
+  color: #212529; /* texto oscuro */
+}
+
+.theme-dark {
+  background-color: #1f2937; /* gris/azul oscuro agradable */
+  color: #e5e7eb; /* texto claro */
+}
+
+/* Asegurar que los contenedores hereden bien */
+body.theme-dark .navbar { background-color: #111827 !important; }
+body.theme-dark main { background-color: transparent; }
+body.theme-light main { background-color: transparent; }
+
+/* Botón de tema: buen contraste en hover según tema */
+.theme-toggle { transition: background-color .2s, color .2s, border-color .2s; }
+.theme-dark .theme-toggle:hover { background:#f8f9fa; color:#212529; border-color:#f8f9fa; }
+.theme-light .theme-toggle:hover { background:#212529; color:#f8f9fa; border-color:#212529; }
+
+/* Título y controles del header: que no se rompan ni salten */
+.header-controls { min-width: 240px; }
+.text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Cards: mantener posters razonables y contraste */
+@media (min-width: 992px) {
+  .card img.card-img-top { height: 320px; object-fit: cover; }
+}
+@media (max-width: 991.98px) {
+  .card img.card-img-top { height: 260px; object-fit: cover; }
+}
+
+.theme-dark .card { background-color:#111827; color:#e5e7eb; border-color:#374151; }
+.theme-dark .modal-content { background-color:#111827; color:#e5e7eb; }
+
+/* Pósters SIN recorte */
+.poster-img {
+  width: 100%;
+  height: auto;          /* <- clave: no fijamos altura */
+  object-fit: contain;   /* mostramos la imagen completa */
+  background: transparent;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+/* Quita cualquier altura fija previa si la pusimos antes */
+.card img.card-img-top { height: auto !important; }
+
+/* Cards y modal en oscuro (si usas theme-dark) */
+.theme-dark .card { background-color:#111827; color:#e5e7eb; border-color:#374151; }
+.theme-dark .modal-content { background-color:#111827; color:#e5e7eb; }
+
+/* Skeleton placeholder */
+.card.h-100 { display:flex; flex-direction:column; }
+
+/* ======== GRID estable para la cartelera ======== */
+.catalog-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* Cada item ocupa toda su celda; con 1 resultado, la tarjeta se estira en 1fr (no queda “columna angosta”) */
+.grid-item{
+  display: contents;            /* permite que la tarjeta dentro ocupe toda la celda */
+}
+
+/* ======== Skeletons (loading) ======== */
+.skeleton-card{
+  background: #1e2732;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,.25);
+  padding: .75rem .9rem 1rem;
+}
+.skeleton-poster{
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: #2a3645;
+  border-radius: 8px;
+  margin-bottom: .75rem;
+}
+.skeleton-line{
+  height: 12px;
+  background: #2a3645;
+  border-radius: 6px;
+  margin-top: .4rem;
+}
+.skeleton-line.w-80{ width: 80%; }
+.skeleton-line.w-60{ width: 60%; }
+
+/* (Si usas card propia dentro de MovieCard, no hace falta tocarla;
+   pero asegúrate de que la imagen use aspect-ratio y object-fit: cover) */
+/* Contenedor y póster con proporción fija (evita que “salte” la card) */
+.poster-wrap{
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #2a3645; /* color de fondo por si tarda en cargar */
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.poster{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-grid.row.row-cols-1 > .col:only-child {
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Brand grande */
+.navbar .brand-hero{
+  font-weight: 800;
+  letter-spacing: .2px;
+  font-size: clamp(1.9rem, 2.6vw, 2.8rem);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* Suavidad al hover para ambos botones (Inicio y Claro/Oscuro) */
+.theme-toggle{
+  transition: background-color .2s, color .2s, border-color .2s, transform .05s;
+}
+.theme-toggle:active{ transform: translateY(1px); }
+
+/* 1) Hacer más pequeño el título de la página */
+.page-title {
+  font-size: clamp(1.2rem, 1.6vw, 1.6rem); /* antes más grande */
+  font-weight: 700;
+}
+
+/* 2) Botones Inicio / Claro / Oscuro más grandes */
+.theme-toggle {
+  font-size: 1rem;          /* texto un poquito más grande */
+  padding: 0.5rem 1rem;     /* más altos y cómodos */
+  border-radius: 8px;
+  transition: background-color .2s, color .2s, border-color .2s, transform .05s;
+}
+
+.theme-toggle:active {
+  transform: translateY(1px);
+}
+
+/* ===== Select moderno (nativo) ===== */
+.select-modern{
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 14px;
+  padding: .65rem 2.75rem .65rem .9rem;     /* espacio para la flecha */
+  border: 1px solid var(--sel-bd, #ced4da);
+  background-color: var(--sel-bg, #fff);
+  color: var(--sel-fg, #212529);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.06),
+    inset 0 1px 0 rgba(255,255,255,.4);
+  transition: border-color .2s, box-shadow .2s, background-color .2s, color .2s;
+  background-image:
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2399a1ae' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right .85rem center;
+  background-size: 18px;
+}
+
+/* Hover / focus ring */
+.select-modern:hover{
+  border-color: var(--sel-bd-hover, #a7b0bb);
+}
+.select-modern:focus{
+  border-color: var(--sel-ring, #6ea8fe);
+  box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 35%, transparent);
+  outline: 0;
+}
+
+/* Deshabilitado */
+.select-modern:disabled{
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Tema oscuro / claro con tus clases del <body> */
+body.theme-dark .select-modern{
+  --sel-bg: #111827;   /* zinc-900 */
+  --sel-fg: #e5e7eb;   /* zinc-200 */
+  --sel-bd: #374151;   /* zinc-700 */
+  --sel-bd-hover: #4b5563;
+  --sel-ring: #60a5fa; /* sky-400 */
+  background-image:
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+}
+
+body.theme-light .select-modern{
+  --sel-bg: #ffffff;
+  --sel-fg: #212529;
+  --sel-bd: #ced4da;
+  --sel-bd-hover: #a7b0bb;
+  --sel-ring: #6ea8fe;
+}
+
+/* (Opcional) efecto “elevación” al abrir en algunos navegadores */
+.select-modern:active{
+  transform: translateY(0);
+}
+
+/* ===== React Select (prefijo: rs__) ===== */
+.rs__control{
+  border-radius: 14px !important;
+  min-height: 44px !important;
+  padding-inline: 4px !important;
+  font-size: 1rem !important;
+  border-color: var(--sel-bd, #ced4da) !important;
+  background-color: var(--sel-bg, #fff) !important;
+  color: var(--sel-fg, #212529) !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06) !important;
+  transition: border-color .2s, box-shadow .2s, background-color .2s, color .2s !important;
+}
+.rs__control:hover{
+  border-color: var(--sel-bd-hover, #a7b0bb) !important;
+}
+.rs__control--is-focused{
+  border-color: var(--sel-ring, #6ea8fe) !important;
+  box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 35%, transparent) !important;
+}
+
+.rs__value-container{ padding: 4px 8px !important; }
+.rs__single-value{ color: var(--sel-fg, #212529) !important; }
+.rs__placeholder{ color: var(--sel-fg, #212529) !important; opacity: .72 !important; }
+.rs__input-container{ color: var(--sel-fg, #212529) !important; }
+
+.rs__indicators{ gap: 2px !important; }
+.rs__indicator{ color: var(--sel-fg, #212529) !important; padding-inline: 8px !important; }
+.rs__indicator-separator{ display: none !important; } /* sin línea separadora */
+
+.rs__menu{
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background-color: var(--sel-bg, #fff) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2) !important;
+  z-index: 9999 !important;
+}
+.rs__menu-list{ padding-block: 4px !important; }
+.rs__option{
+  cursor: pointer !important;
+  padding-block: 10px !important;
+  color: var(--sel-fg, #212529) !important;
+  background-color: transparent !important;
+}
+.rs__option--is-focused{
+  background-color: color-mix(in srgb, var(--sel-ring, #6ea8fe) 12%, var(--sel-bg, #fff)) !important;
+}
+.rs__option--is-selected{
+  background-color: color-mix(in srgb, var(--sel-ring, #6ea8fe) 24%, var(--sel-bg, #fff)) !important;
+}
+
+/* Variables para claro/oscuro (ya usas theme-dark / theme-light en <body>) */
+body.theme-dark{
+  --sel-bg: #111827;
+  --sel-fg: #e5e7eb;
+  --sel-bd: #374151;
+  --sel-bd-hover: #4b5563;
+  --sel-ring: #60a5fa;
+}
+body.theme-light{
+  --sel-bg: #ffffff;
+  --sel-fg: #212529;
+  --sel-bd: #ced4da;
+  --sel-bd-hover: #a7b0bb;
+  --sel-ring: #6ea8fe;
+}
+
+/* ===== Search moderno (mismo look que el react-select) ===== */
+.form-control.search-modern{
+  border-radius: 14px !important;
+  min-height: 44px;
+  padding-left: 42px !important;   /* espacio icono izquierda */
+  padding-right: 38px !important;  /* espacio botón limpiar */
+  border: 1px solid var(--sel-bd, #ced4da) !important;
+  background-color: var(--sel-bg, #fff) !important;
+  color: var(--sel-fg, #212529) !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.4) !important;
+  transition: border-color .2s, box-shadow .2s, background-color .2s, color .2s !important;
+}
+.form-control.search-modern::placeholder{ color: var(--sel-fg, #212529); opacity: .6; }
+.form-control.search-modern:hover{ border-color: var(--sel-bd-hover, #a7b0bb) !important; }
+.form-control.search-modern:focus{
+  border-color: var(--sel-ring, #6ea8fe) !important;
+  box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 35%, transparent) !important;
+  outline: 0;
+}
+
+/* Ícono de búsqueda: asegúrate de que se vea sobre el input y con el color del tema */
+.search-wrap{ width: 100%; }
+.search-icon{
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%); pointer-events: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  z-index: 2;                     /* que no lo tape el input */
+  color: var(--sel-fg, #212529);  /* 👈 toma el color del tema */
+  opacity: .8;
+}
+
+/* Botón limpiar */
+.btn-clear{
+  position: absolute; right: 8px; top: 50%;
+  transform: translateY(-50%);
+  border: 0; width: 28px; height: 28px; line-height: 26px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.06);
+  cursor: pointer; font-size: 18px; opacity: .85;
+}
+.btn-clear:hover{ background: rgba(0,0,0,.12); opacity: 1; }
+
+/* Variables para claro/oscuro – las mismas que usa tu react-select */
+body.theme-dark{
+  --sel-bg: #111827;
+  --sel-fg: #e5e7eb;
+  --sel-bd: #374151;
+  --sel-bd-hover: #4b5563;
+  --sel-ring: #60a5fa;
+}
+body.theme-light{
+  --sel-bg: #ffffff;
+  --sel-fg: #212529;
+  --sel-bd: #ced4da;
+  --sel-bd-hover: #a7b0bb;
+  --sel-ring: #6ea8fe;
+}
+
+/* ===== Botón "ghost" sin borde naranja, suave y acorde al tema ===== */
+.btn-ghost{
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: inherit !important;
+  transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, border-color .18s ease;
+  border-radius: 10px;
+  padding: .45rem .9rem;
+}
+
+/* Hover/focus ring suaves, sin naranja */
+body.theme-light .btn-ghost:hover{
+  background: rgba(0,0,0,.05) !important;
+}
+body.theme-dark .btn-ghost:hover{
+  background: rgba(255,255,255,.08) !important;
+}
+
+.navbar .btn-ghost:focus,
+.navbar .btn-ghost:focus-visible{
+  outline: none !important;
+  border-color: transparent !important;
+  /* anillo suave usando tu variable --sel-ring si existe */
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 28%, transparent) !important;
+}
+
+/* Estado activo sutil */
+.btn-ghost:active{
+  transform: translateY(1px);
+}
+
+/* ===== Popover del menú colapsado (debajo del hamburguesa) ===== */
+.menu-popover{
+  border-radius: 14px;
+  padding: .4rem;
+  box-shadow: 0 16px 36px rgba(0,0,0,.25);
+  backdrop-filter: blur(6px);
+  transition: opacity .18s ease, transform .18s ease;
+  border: 1px solid transparent;
+}
+
+/* Colores del popover según tema */
+body.theme-light .menu-popover{
+  background: rgba(255,255,255,.96) !important;
+  border-color: #e9ecef !important;   /* gris claro */
+}
+body.theme-dark .menu-popover{
+  background: rgba(17,24,39,.94) !important; /* #111827 con leve transparencia */
+  border-color: #374151 !important;          /* zinc-700 */
+}
+
+/* Quitar el pill/borde naranja heredado por Bootswatch en botones dentro del navbar */
+.navbar .btn,
+.navbar .btn:focus,
+.navbar .btn:focus-visible{
+  box-shadow: none; /* base */
+}
+
+/* Pero a los ghost sí les damos su ring custom (arriba ya lo definimos) */
+.navbar .btn-ghost:focus,
+.navbar .btn-ghost:focus-visible{
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 28%, transparent) !important;
+}
+
+/* Opcional: mover un pelín a la izquierda el grupo de acciones en desktop para que no "pegue" al borde */
+@media (min-width: 992px){
+  .navbar-actions { gap: .5rem; }
+}
+
+/* Opcional: estilo del toggler para que combine con tu paleta */
+.navbar .navbar-toggler{
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 12px;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+body.theme-light .navbar .navbar-toggler{
+  border-color: rgba(0,0,0,.15);
+}
+.navbar .navbar-toggler:focus{
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 25%, transparent) !important;
+}
+
+/* Popover del menú (solo efecto en móvil) */
+.menu-popover{
+  border-radius: 14px;
+  padding: .45rem;
+  box-shadow: 0 16px 36px rgba(0,0,0,.25);
+  border: 1px solid transparent;
+  backdrop-filter: blur(6px);
+}
+body.theme-light .menu-popover{ background: rgba(255,255,255,.96) !important; border-color:#e9ecef !important; }
+body.theme-dark  .menu-popover{ background: rgba(17,24,39,.94) !important;  border-color:#374151 !important; }
+
+/* En desktop NO queremos “burbuja” */
+@media (min-width: 992px){
+  .no-popover-lg{ background: transparent !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; }
+}
+
+/* Botón ghost: limpio, sin borde naranja, acorde al tema */
+.navbar .btn-ghost{
+  background: transparent !important;
+  border: 0 !important;
+  color: inherit !important;
+  padding: .45rem .9rem;
+  border-radius: 10px;
+  transition: background-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+body.theme-light .navbar .btn-ghost:hover{ background: rgba(0,0,0,.06) !important; }
+body.theme-dark  .navbar .btn-ghost:hover{ background: rgba(255,255,255,.08) !important; }
+.navbar .btn-ghost:focus{ box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--sel-ring, #6ea8fe) 28%, transparent) !important; outline: none; }
+
+/* (Opcional) mejorar un poco el toggler */
+.navbar .navbar-toggler{ border-radius: 12px; transition: background-color .18s ease, border-color .18s ease; }
+
+/* Legibilidad del navbar en claro/oscuro */
+body.theme-light .navbar, body.theme-light .navbar * { color:#212529 !important; }
+body.theme-dark  .navbar, body.theme-dark  .navbar * { color:#e5e7eb !important; }
+
+/* Popover del menú móvil (debajo del hamburguesa) */
+.menu-popover{
+  border-radius: 14px;
+  padding: .55rem .6rem;
+  box-shadow: 0 16px 36px rgba(0,0,0,.25);
+  border: 1px solid transparent;
+  backdrop-filter: blur(6px);
+  font-size: 0.96rem; line-height: 1.25rem;
+}
+body.theme-light .menu-popover{ background: rgba(255,255,255,.98) !important; border-color:#e9ecef !important; color:#212529 !important; }
+body.theme-dark  .menu-popover{ background: rgba(17,24,39,.96) !important;  border-color:#374151 !important; color:#e5e7eb !important; }
+
+/* Botón ghost (móvil) y botón nav (desktop) */
+.navbar .btn-ghost, .navbar .btn-nav{
+  background: transparent !important;
+  border-radius: 10px;
+  padding: .5rem .9rem;
+  transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, border-color .18s ease;
+  box-shadow: none !important;
+}
+body.theme-light .navbar .btn-ghost, body.theme-light .navbar .btn-nav{
+  color:#212529 !important; border:1px solid rgba(0,0,0,.14) !important;
+}
+body.theme-dark  .navbar .btn-ghost, body.theme-dark  .navbar .btn-nav{
+  color:#e5e7eb !important; border:1px solid rgba(255,255,255,.16) !important;
+}
+body.theme-light .navbar .btn-ghost:hover, body.theme-light .navbar .btn-nav:hover{ background: rgba(0,0,0,.06) !important; }
+body.theme-dark  .navbar .btn-ghost:hover, body.theme-dark  .navbar .btn-nav:hover{ background: rgba(255,255,255,.10) !important; }
+.navbar .btn-ghost:focus, .navbar .btn-nav:focus{
+  outline:0 !important;
+  box-shadow:0 0 0 .2rem color-mix(in srgb, var(--sel-ring,#6ea8fe) 26%, transparent) !important;
+}
+
+/* Hamburguesa */
+.navbar .navbar-toggler{ border-radius:12px; transition:background-color .18s ease, border-color .18s ease; box-shadow:none !important; }
+
+/* Desktop: separar un poco las acciones */
+@media (min-width: 992px){ .navbar .navbar-nav{ gap:.5rem; } }
+
+/* Oculta el ring si el foco NO es de teclado */
+.navbar .btn-ghost:focus:not(:focus-visible),
+.navbar .btn-nav:focus:not(:focus-visible){
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* (opcional) quitar flash azul en móviles */
+.navbar .btn-ghost,
+.navbar .btn-nav{
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mantén el ring para teclado, quítalo tras click/tap */
+.navbar .btn-ghost:focus:not(:focus-visible),
+.navbar .btn-nav:focus:not(:focus-visible){
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* opcional: quita el flash azul en móviles */
+.navbar .btn-ghost, .navbar .btn-nav{
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ======================== */
+/* TEMAS PERSONALIZADOS     */
+/* ======================== */
+
+/* ======== MODO CLARO ======== */
+body.theme-light {
+  background-color: #f8fafc;      /* gris muy claro */
+  color: #212529;
+}
+
+body.theme-light .navbar {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+body.theme-light .btn-nav,
+body.theme-light .btn-ghost {
+  color: #212529 !important;
+  border: 1px solid rgba(0,0,0,.15) !important;
+  background-color: #ffffff !important;
+}
+
+body.theme-light .btn-nav:hover,
+body.theme-light .btn-ghost:hover {
+  background-color: #e7f1ff !important;   /* azulito suave */
+  color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+/* ======== MODO OSCURO ======== */
+body.theme-dark {
+  background-color: #0b1120;   /* más profundo que #1f2937 */
+  color: #e5e7eb;
+}
+
+body.theme-dark .navbar {
+  background-color: #111827 !important;
+  border-bottom: 1px solid #1e293b;
+}
+
+body.theme-dark .btn-nav,
+body.theme-dark .btn-ghost {
+  color: #e5e7eb !important;
+  border: 1px solid rgba(255,255,255,.2) !important;
+  background-color: #1e293b !important;   /* gris azulado */
+}
+
+body.theme-dark .btn-nav:hover,
+body.theme-dark .btn-ghost:hover {
+  background-color: #2563eb !important;   /* azul fuerte */
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* ====== Animación suave al cambiar ====== */
+body.theme-light, body.theme-dark {
+  transition: background-color .35s ease, color .35s ease;
+}
+
+.navbar, .btn, .card, main {
+  transition: background-color .35s ease, color .35s ease, border-color .35s ease;
+}
+
+/* ===== Icono del tema (☀️/🌙) con cross-fade ===== */
+.theme-btn { display: inline-flex; align-items: center; gap: .5rem; }
+
+.theme-icon{
+  position: relative;
+  width: 1.25em; height: 1.25em;
+  display: inline-block;
+  pointer-events: none;
+}
+
+/* Sun (before) / Moon (after) superpuestos */
+.theme-icon::before,
+.theme-icon::after{
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  opacity: 0;                         /* por defecto, ocultos */
+  transform: scale(.85) rotate(-10deg);
+  transition: opacity .28s ease, transform .35s ease;
+  font-size: 1em; line-height: 1;
+}
+
+/* Contenido de cada pseudo-elemento */
+.theme-icon::before{ content: "☀️"; }
+.theme-icon::after { content: "🌙"; }
+
+/* Modo claro: muestra SOL; modo oscuro: muestra LUNA */
+.theme-icon[data-mode="light"]::before{ opacity: 1; transform: scale(1) rotate(0deg); }
+.theme-icon[data-mode="dark"]::after { opacity: 1; transform: scale(1) rotate(0deg); }
+
+/* Feedback al click */
+.theme-btn:active .theme-icon::before,
+.theme-btn:active .theme-icon::after{
+  transform: scale(.95) rotate(15deg);
+}
+
+/* Focus accesible, sin quedarse encendido tras click */
+.theme-btn:focus-visible{
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--accent, #3b82f6) 28%, transparent) !important;
+  outline: 0;
+}
+.theme-btn:focus:not(:focus-visible){
+  box-shadow: none !important;
+  outline: none !important;
+}

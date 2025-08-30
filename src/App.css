@@ -1,0 +1,6 @@
+#root {
+  width: 100%;
+  max-width: none;     /* ❌ evita limitar el ancho */
+  padding: 0;          /* ❌ quita padding global que estrecha */
+  text-align: initial; /* ❌ no centres todo el texto */
+}

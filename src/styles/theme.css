@@ -1,0 +1,120 @@
+/* Fondo principal con leve gradiente según tema */
+body.theme-light{
+  --fg: #212529;
+  --bg: #f8fafc;
+  --ring: color-mix(in srgb, var(--accent) 35%, transparent);
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f2f6ff 100%);
+  color: var(--fg);
+}
+body.theme-dark{
+  --fg: #e5e7eb;
+  --bg: #0b1120;
+  --ring: color-mix(in srgb, var(--accent) 35%, transparent);
+  background:
+    linear-gradient(180deg, #0b1120 0%, #0a0f1f 100%);
+  color: var(--fg);
+}
+
+/* Navbar con leve degradado y borde */
+body.theme-light .navbar{
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%) !important;
+  border-bottom: 1px solid #e5e7eb;
+}
+body.theme-dark .navbar{
+  background: linear-gradient(180deg, #111827 0%, #0f172a 100%) !important;
+  border-bottom: 1px solid #1e293b;
+}
+
+/* Transiciones globales */
+body, .navbar, .card, .btn, .menu-popover{
+  transition: background-color var(--t-med) ease,
+              color var(--t-med) ease,
+              border-color var(--t-med) ease,
+              box-shadow var(--t-med) ease;
+}
+
+/* Respeto a usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce){
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ====== Dark Form (solo dentro del modal) ====== */
+.modal-frame-custom .card.bg-dark{
+  background: #0c1222;              /* capa principal */
+  color: #e6e9ef;
+  border-radius: 16px;
+}
+
+.modal-frame-custom .form-control,
+.modal-frame-custom .form-select,
+.modal-frame-custom textarea{
+  background: #111a2e;              /* capa 2 */
+  color: #e6e9ef;
+  border: 1px solid #1f2a44;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.modal-frame-custom .form-control::placeholder,
+.modal-frame-custom textarea::placeholder{
+  color: #9aa7bd;                    /* placeholder suave */
+}
+
+.modal-frame-custom .form-control:focus,
+.modal-frame-custom .form-select:focus,
+.modal-frame-custom textarea:focus{
+  background: #0f1830;
+  border-color: #38bdf8;             /* acento */
+  box-shadow: 0 0 0 3px rgba(56,189,248,.25);
+  color: #eef2ff;
+}
+
+/* Switch */
+.modal-frame-custom .form-check-input{
+  background-color: #18243f;
+  border-color: #1f2a44;
+}
+.modal-frame-custom .form-check-input:checked{
+  background-color: #38bdf8;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56,189,248,.2);
+}
+
+/* Textarea scrollbar (webkit) */
+.modal-frame-custom textarea::-webkit-scrollbar{ height:12px; width:12px; }
+.modal-frame-custom textarea::-webkit-scrollbar-track{ background:#0c1222; }
+.modal-frame-custom textarea::-webkit-scrollbar-thumb{
+  background:#1f2a44; border-radius:8px;
+}
+.modal-frame-custom textarea::-webkit-scrollbar-thumb:hover{ background:#2a3a62; }
+
+/* ====== Poster preview elegante + skeleton ====== */
+.poster-frame{
+  position: relative;
+  width: 100%;
+  height: 420px;             /* fija alto del preview */
+  background: radial-gradient(120% 100% at 0% 0%, #0f1830, #0a1020);
+  border: 1px dashed rgba(255,255,255,.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.poster-frame img{
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  border-radius: 10px;
+}
+
+/* shimmer cuando no hay imagen */
+.poster-frame.skeleton::before{
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 1.2s linear infinite;
+}
+@keyframes shimmer{ to{ transform: translateX(100%); } }
+
+/* Botones del footer del modal */
+.modal-frame-custom .btn-success{ background:#10b981; border:none; }
+.modal-frame-custom .btn-success:hover{ filter: brightness(1.08); }
+.modal-frame-custom .btn-outline-secondary{ border-color:#2a3a62; color:#cbd5e1; }
+.modal-frame-custom .btn-outline-secondary:hover{ background:#1b2540; border-color:#3b4f80; }

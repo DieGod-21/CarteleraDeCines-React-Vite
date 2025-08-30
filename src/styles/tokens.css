@@ -1,0 +1,16 @@
+:root{
+  /* Colores base */
+  --accent: #3b82f6;           /* azul principal */
+  --accent-2: #22c55e;         /* verde secundario */
+  --bg-elev-1: #ffffff;        /* claro base para elevación */
+  --bg-elev-1-dark: #1e293b;   /* oscuro base para elevación */
+
+  /* Radios y sombras */
+  --radius: 12px;
+  --shadow-1: 0 10px 30px rgba(0,0,0,.12);
+  --shadow-1-dark: 0 16px 36px rgba(0,0,0,.35);
+
+  /* Duraciones */
+  --t-fast: .18s;
+  --t-med: .35s;
+}

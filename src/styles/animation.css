@@ -1,0 +1,62 @@
+/* ===== Animación del botón de tema (☀️/🌙) ===== */
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* contenedor del icono */
+.theme-icon{
+  position: relative;
+  width: 1.25em;
+  height: 1.25em;
+  display: inline-block;
+}
+
+/* apilar ambos iconos y hacer cross-fade */
+.theme-icon .sun,
+.theme-icon .moon{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(.85) rotate(-10deg);
+  transition:
+    opacity .28s ease,
+    transform .35s ease;
+}
+
+/* estado visible según modo */
+.theme-icon[data-mode="light"] .sun{
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+.theme-icon[data-mode="dark"] .moon{
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* pequeño spin al cambiar (se nota solo en el activo) */
+.theme-btn:active .theme-icon .sun,
+.theme-btn:active .theme-icon .moon{
+  transform: scale(.95) rotate(15deg);
+}
+
+/* focus ring respetando accesibilidad */
+.theme-btn:focus-visible{
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--accent, #3b82f6) 28%, transparent) !important;
+  outline: 0;
+}
+
+/* no mostrar ring tras click/tap (se mantiene con teclado) */
+.theme-btn:focus:not(:focus-visible){
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* opcional: animación del hamburguesa al abrir/cerrar */
+.navbar-toggler[aria-expanded="true"]{
+  background-color: color-mix(in srgb, var(--accent, #3b82f6) 10%, transparent);
+  transition: background-color .2s ease;
+}

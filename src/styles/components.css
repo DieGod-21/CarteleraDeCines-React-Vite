@@ -1,0 +1,258 @@
+/* Botones nav “ghost” y de escritorio */
+.navbar .btn-ghost,
+.navbar .btn-nav{
+  background: transparent !important;
+  border-radius: var(--radius);
+  padding: .5rem .9rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 18%, transparent) !important;
+  color: var(--fg) !important;
+  box-shadow: none !important;
+  transition:
+    transform var(--t-fast) ease,
+    background-color var(--t-fast) ease,
+    border-color var(--t-fast) ease,
+    color var(--t-fast) ease,
+    box-shadow var(--t-fast) ease;
+}
+
+.navbar .btn-ghost:hover,
+.navbar .btn-nav:hover{
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+}
+
+.navbar .btn-ghost:active,
+.navbar .btn-nav:active{
+  transform: translateY(1px);
+}
+
+.navbar .btn-ghost:focus-visible,
+.navbar .btn-nav:focus-visible{
+  box-shadow: 0 0 0 .2rem var(--ring) !important;
+}
+
+/* Menú desplegable móvil (popover) con “slide+fade” */
+.menu-popover{
+  border-radius: calc(var(--radius) + 2px);
+  padding: .55rem .6rem;
+  border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: var(--shadow-1);            /* light por defecto */
+  transform-origin: top right;
+  animation: popIn var(--t-med) ease both;
+}
+
+body.theme-dark .menu-popover{
+  box-shadow: var(--shadow-1-dark);       /* override en dark */
+}
+
+@keyframes popIn{
+  from{ opacity: 0; transform: translateY(-6px) scale(.98); }
+  to  { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+/* Cards con “lift” sutil (opcional) */
+.card{
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: var(--bg-elev-1);           /* valor por defecto (light) */
+}
+
+body.theme-dark .card{
+  background: var(--bg-elev-1-dark);      /* override en dark */
+}
+
+.card:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-1);
+}
+
+/* Borde del toggler más integrado */
+.navbar .navbar-toggler{
+  border-radius: calc(var(--radius) - 2px);
+  border-color: color-mix(in srgb, var(--fg) 22%, transparent);
+}
+
+/* ---- Poster fijo 2:3, sin franjas ---- */
+.movie-card .poster-wrap{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;        /* alto automático en función del ancho */
+  overflow: hidden;
+  background: #0f172a;        /* color de fondo si la imagen tarda */
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+}
+
+.movie-card .poster{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* recorta para llenar sin deformar */
+  display: block;             /* elimina gap por inline images */
+  transform: translateZ(0);   /* evita “saltos” en algunos navegadores */
+}
+
+/* opcional: pequeño zoom al hover */
+.movie-card:hover .poster { transform: scale(1.02); }
+
+/* por si llega una imagen muy pequeña, evita pixelado feo al estirar */
+.movie-card .poster.is-fallback { object-fit: contain; background: #111; }
+
+/* ===== Hero Slider ===== */
+.hero-slider{
+  position: relative;
+  height: clamp(260px, 48vw, 520px);
+  background: #0b1220;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* capas */
+.hero-layer{ position:absolute; inset:0; }
+.hero-fade .bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.hero-fade .bg-next{ opacity:0; }
+.hero-fade.is-anim .bg-next{ animation: heroFadeIn .6s ease forwards; }
+.hero-fade.is-anim .bg-current{ animation: heroFadeOut .6s ease forwards; }
+@keyframes heroFadeIn{ from{opacity:0} to{opacity:1} }
+@keyframes heroFadeOut{ from{opacity:1} to{opacity:0} }
+
+/* slide manual */
+.hero-slide{ pointer-events:none; }
+.hero-slide .slide-track{ display:flex; width:200%; height:100%; transform: translateX(0); }
+.hero-slide .bg{ width:100%; height:100%; object-fit:cover; }
+.hero-slide.is-anim.slide-left  .slide-track{ transition: transform .55s ease; transform: translateX(-50%); }
+.hero-slide.is-anim.slide-right .slide-track{ transition: transform .55s ease; transform: translateX( 50%); }
+
+/* overlay */
+.hero-overlay{
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(8,12,24,.85) 90%);
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding: clamp(14px, 4vw, 36px);
+  color:#fff;
+}
+.hero-overlay .kicker{
+  font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  opacity:.9; margin-bottom:.35rem;
+}
+.hero-overlay .title{
+  font-size: clamp(1.6rem, 6vw, 3.6rem);
+  font-weight:800; line-height:1.05; margin:0 0 .75rem 0;
+  text-shadow: 0 6px 24px rgba(0,0,0,.6);
+}
+.hero-overlay .cta-row{ display:flex; gap:12px; }
+
+/* controles */
+.hero-slider .nav{
+  position:absolute; top:50%; translate: 0 -50%;
+  width:44px; height:44px; border-radius:50%;
+  border:none; background: rgba(0,0,0,.45); color:#fff; font-size:22px;
+  display:grid; place-items:center; cursor:pointer; z-index:2;
+  transition: background .2s ease;
+}
+.hero-slider .nav:hover{ background: rgba(0,0,0,.7); }
+.hero-slider .nav.prev{ left:16px; } .hero-slider .nav.next{ right:16px; }
+
+.hero-slider .dots{
+  position:absolute; left:50%; bottom:14px; translate: -50% 0;
+  display:flex; gap:10px;
+}
+.hero-slider .dot{
+  width:10px; height:10px; border-radius:50%;
+  border:none; background: rgba(255,255,255,.35); cursor:pointer;
+}
+.hero-slider .dot.active{ background:#ffd54d; }
+
+/* ====== FIX: normaliza completamente los dots del Hero ====== */
+.hero-slider .dots .dot,
+.hero-slider .dots .dot.active{
+  width:26px;
+  height:6px;
+  border-radius:999px;
+  border:none;
+  background: rgba(255,255,255,.28) !important; /* base gris suave */
+  box-shadow: none !important;
+  outline: none !important;
+}
+.hero-slider .dots .dot.active{
+  background: rgba(255,255,255,.85) !important;  /* activo en blanco */
+  transform: translateY(-1px);
+}
+
+/* elimina cualquier pseudo-elemento heredado (círculos amarillos) */
+.hero-slider .dots .dot::before,
+.hero-slider .dots .dot::after{
+  content: none !important;
+}
+
+/* por si existía un color anterior específico */
+.hero-slider .dots .dot.active::before,
+.hero-slider .dots .dot.active::after{
+  content: none !important;
+  background: transparent !important;
+}
+
+/* HERO: altura y overlay */
+.hero-slider{
+  position: relative;
+  z-index: 0; /* evita quedarse por encima de otros elementos si algo sube de más el z-index */
+  height: clamp(240px, 45vw, 560px);
+  background: #0b1220;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.hero-slider .bg{
+  width:100%; height:100%;
+  object-fit:cover; object-position:center 35%;
+  display:block;
+}
+.hero-overlay{
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.0) 38%, rgba(8,12,24,.85) 92%);
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding: clamp(12px, 4vw, 36px);
+  color:#fff;
+}
+.hero-overlay .kicker{
+  font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  opacity:.95; margin-bottom:.2rem;
+}
+.hero-overlay .title{
+  font-size: clamp(1.4rem, 6vw, 3.1rem);
+  font-weight:900; line-height:1.05; margin:0 0 .6rem 0;
+  text-shadow: 0 8px 26px rgba(0,0,0,.7);
+}
+
+/* Flechas */
+.hero-slider .nav{
+  position:absolute; top:50%; translate: 0 -50%;
+  width:44px; height:44px; border-radius:50%;
+  border:none; background: rgba(0,0,0,.45); color:#fff; font-size:22px;
+  display:grid; place-items:center; cursor:pointer; z-index:2;
+  transition: background .2s ease;
+}
+.hero-slider .nav:hover{ background: rgba(0,0,0,.7); }
+.hero-slider .nav.prev{ left:18px; } .hero-slider .nav.next{ right:18px; }
+
+/* Dots discretos (pastillas) */
+.hero-slider .dots{
+  position:absolute; left:50%; bottom:16px; translate: -50% 0;
+  display:flex; gap:10px;
+}
+.hero-slider .dot{
+  width:26px; height:6px; border-radius:999px;
+  border:none; background: rgba(255,255,255,.28);
+  cursor:pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.hero-slider .dot.active{
+  background: rgba(255,255,255,.85);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 576px){
+  .hero-slider{ height: clamp(220px, 58vw, 420px); }
+  .hero-slider .nav{ width:36px; height:36px; font-size:18px; }
+  .hero-overlay .title{ font-size: clamp(1.2rem, 7vw, 2.2rem); }
+}
