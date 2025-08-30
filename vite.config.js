@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+const isProd = process.env.NODE_ENV === 'production';
+
 export default defineConfig({
   plugins: [react()],
-  // 👇 nombre EXACTO del repo (sensible a mayúsculas/minúsculas)
-  base: '/CarteleraDeCines-React-Vite/',
-})
+  base: isProd ? '/CarteleraDeCines-React-Vite/' : '/',  // local=/  prod=/repo/
+});

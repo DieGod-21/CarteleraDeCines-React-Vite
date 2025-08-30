@@ -1,8 +1,11 @@
+// src/components/MovieCard.jsx
+import { posterOrFallback, fromPublic } from '../utils/assetUrl.js';
+
 export default function MovieCard({
   m,
-  onView,    // () => void   -> Ver (GET por ID)
-  onEdit,    // () => void   -> Editar (PUT)
-  onDelete,  // () => void   -> Eliminar (DELETE)
+  onView,
+  onEdit,
+  onDelete,
 }) {
   const {
     Poster,
@@ -14,12 +17,9 @@ export default function MovieCard({
     Ubication,  // por si viene con "c"
   } = m ?? {};
 
-  const posterSrc =
-    Poster && String(Poster).trim()
-      ? Poster
-      : "/img/fallback_poster.jpg"; // pon esta imagen en public/img/
-
-  const ubic = Ubicacion ?? Ubication ?? "";
+  // 🔸 Usa el helper (sin leading slash) para respetar BASE_URL en Pages
+  const posterSrc = posterOrFallback(Poster, 'img/fallback_poster.jpg');
+  const ubic = Ubicacion ?? Ubication ?? '';
 
   return (
     <article className="movie-card card h-100 shadow-sm">
@@ -27,32 +27,34 @@ export default function MovieCard({
       <div
         className="poster-wrap"
         style={{
-          position: "relative",
-          width: "100%",
-          aspectRatio: "2 / 3",
-          overflow: "hidden",
-          background: "#0f172a",
-          borderTopLeftRadius: ".5rem",
-          borderTopRightRadius: ".5rem",
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '2 / 3',
+          overflow: 'hidden',
+          background: '#0f172a',
+          borderTopLeftRadius: '.5rem',
+          borderTopRightRadius: '.5rem',
         }}
         onClick={onView}
         role="button"
-        aria-label={`Ver ${Title || "película"}`}
+        aria-label={`Ver ${Title || 'película'}`}
       >
         <img
           src={posterSrc}
-          alt={Title ?? "Póster"}
+          alt={Title ?? 'Póster'}
           className="poster"
           loading="lazy"
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-            transition: "transform .25s ease",
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block',
+            transition: 'transform .25s ease',
           }}
           onError={(e) => {
-            e.currentTarget.src = "/img/fallback_poster.jpg";
+            // 🔸 Si falla el Poster remoto, forzamos el fallback respetando BASE_URL
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fromPublic('img/fallback_poster.jpg');
           }}
         />
       </div>
@@ -60,7 +62,7 @@ export default function MovieCard({
       <div className="card-body d-flex flex-column">
         <h6 className="card-title mb-1 text-truncate">{Title}</h6>
         <small className="text-muted">
-          {Year} {Year && Type ? "•" : ""} {Type}
+          {Year} {Year && Type ? '•' : ''} {Type}
         </small>
 
         {description && (
